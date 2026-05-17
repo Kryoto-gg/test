@@ -1,0 +1,35 @@
+name: SQL Validator CI Pipeline
+
+# main、developブランチへのプッシュやプルリクエストをトリガーにする
+on:
+  push:
+    branches: [ "main", "develop" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. コードをCI環境にチェックアウト
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # 2. Python環境のセットアップ
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.10'
+        cache: 'pip' # 2回目以降のライブラリインストールを高速化
+
+    # 3. テストに必要なライブラリ（pytest, nbmake）のインストール
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest nbmake
+
+    # 4. nbmakeを使ってColabファイルのテストを実行
+    - name: Run SQL Notebook Test
+      run: |
+        pytest --nbmake sql_validation_test.ipynb
