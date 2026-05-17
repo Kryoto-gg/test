@@ -32,4 +32,4 @@ jobs:
     # 4. nbmakeを使ってColabファイルのテストを実行
     - name: Run SQL Notebook Test
       run: |
-        pytest --nbmake sql_validation_test.ipynb
+        pytest -s --nbmake sql_validation_test.ipynb
